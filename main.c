@@ -2,12 +2,21 @@
 #include <string.h>
 #include "smart-alloc.h"
 
+static char *
+smart_dup(const char *s)
+{
+    char *copy = smart_alloc(strlen(s) + 1);
+    if(copy) {
+        strcpy(copy, s);
+    }
+    return copy;
+}
+
 void
 basic_test(void)
 {
-    char *message = smart_alloc(sizeof("Hello, World!"));
+    char *message = smart_dup("Hello, World!");
 
-    strcpy(message, "Hello, World!");
     printf("%s\n", message);
     /*smart_free(message);*/
 
