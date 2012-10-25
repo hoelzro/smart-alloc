@@ -14,6 +14,27 @@ struct free_list {
     size_t size;
 };
 
+static void
+dump_memory(const char *message)
+{
+    struct free_list *node = fl_head;
+
+    if(smart_debug) {
+        printf("%s\n", message);
+    }
+    while(node) {
+        if(smart_debug) {
+            printf("node = %p, size = %d, next = %p\n", node, node->size, node->next);
+        }
+        if(node == node->next) {
+            printf("loop detected! terminating\n");
+            node = 0;
+            (void)node->size;
+        }
+        node = node->next;
+    }
+}
+
 static int
 init_memory(void)
 {
