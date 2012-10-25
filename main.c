@@ -39,6 +39,22 @@ two_alloc(void)
 }
 
 void
+oom(void)
+{
+    char *mem1 = smart_alloc(BIG_ALLOC);
+    char *mem2 = smart_alloc(BIG_ALLOC);
+
+    if(! mem2) {
+        printf("%d: OK\n", __LINE__);
+    } else {
+        printf("%d: NOT OK\n", __LINE__);
+    }
+
+    smart_free(mem1);
+    smart_free(mem2);
+}
+
+void
 basic_free(void)
 {
 }
@@ -54,6 +70,7 @@ main(int argc, char **argv)
 {
     basic_test();
     two_alloc();
+    oom();
     basic_free();
     free_null();
     return 0;
