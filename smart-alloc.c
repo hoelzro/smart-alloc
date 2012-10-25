@@ -1,6 +1,10 @@
 #include "smart-alloc.h"
 
+#include <stdio.h>
+
 #define ARENA_SIZE (4096)
+
+int smart_debug = 0;
 
 struct free_list *fl_head = NULL;
 char memory[ARENA_SIZE];
