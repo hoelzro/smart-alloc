@@ -5,3 +5,6 @@ main: main.c smart-alloc.o
 
 smart-alloc.o: smart-alloc.c smart-alloc.h
 	gcc $(CFLAGS) -c -o $@ $<
+
+clean:
+	rm -f *.o main
