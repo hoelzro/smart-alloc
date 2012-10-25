@@ -2,6 +2,8 @@
 #include <string.h>
 #include "smart-alloc.h"
 
+#define BIG_ALLOC 4000
+
 static char *
 smart_dup(const char *s)
 {
