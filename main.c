@@ -57,6 +57,15 @@ oom(void)
 void
 basic_free(void)
 {
+    char *mem = smart_alloc(BIG_ALLOC);
+    smart_free(mem);
+    mem = smart_alloc(BIG_ALLOC);
+
+    if(mem) {
+        printf("%d: OK\n", __LINE__);
+    } else {
+        printf("%d: NOT OK\n", __LINE__);
+    }
 }
 
 void
