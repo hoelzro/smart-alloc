@@ -36,6 +36,11 @@ two_alloc(void)
     smart_free(message2);
 }
 
+void
+basic_free(void)
+{
+}
+
 int
 main(int argc, char **argv)
 {
