@@ -38,6 +38,12 @@ dump_memory(const char *message)
 static int
 init_memory(void)
 {
+    int i;
+
+    for(i = 0; i < ARENA_SIZE; i++) {
+        memory[i] = 0;
+    }
+
     fl_head       = (struct free_list *) memory;
     fl_head->next = NULL;
     fl_head->size = ARENA_SIZE - sizeof(struct free_list);
