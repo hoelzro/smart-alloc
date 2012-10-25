@@ -14,6 +14,10 @@ struct free_list {
     size_t size;
 };
 
+struct alloc {
+    size_t size;
+};
+
 static void
 dump_memory(const char *message)
 {
@@ -57,6 +61,7 @@ smart_alloc(size_t size)
     struct free_list **origin;
     struct free_list *node;
     struct free_list *next_node;
+    struct alloc *header;
 
     if(! fl_head) {
         if(init_memory()) {
@@ -75,15 +80,40 @@ smart_alloc(size_t size)
         return NULL;
     }
 
-    next_node       = (struct free_list *) (((char *) node) + sizeof(struct free_list) + size);
-    next_node->next = node->next;
-    next_node->size = node->size - (sizeof(struct free_list) * 2 + size);
-    *origin         = next_node;
+    next_node = (struct free_list *) (((char *) node) + sizeof(struct free_list) + size);
+    if(node->next != next_node) {
+        next_node->next = node->next;
+        next_node->size = node->size - (sizeof(struct free_list) + size);
+    }
+    *origin = next_node;
 
-    return (void *) node + sizeof(struct free_list);
+    header       = (struct alloc *) node;
+    header->size = size;
+
+    return (void *) node + sizeof(struct alloc);
 }
 
 void
 smart_free(void *p)
 {
+    struct free_list **origin  = &fl_head;
+    struct free_list *node     = fl_head;
+    struct free_list *new_node = NULL;
+    struct alloc *header       = (struct alloc *) (p - sizeof(struct alloc));
+    size_t size;
+
+    if(!p) {
+        return;
+    }
+
+    while(node && ((void *) node) < p) {
+        origin = &(node->next);
+        node   = node->next;
+    }
+
+    new_node       = (struct free_list *) header;
+    size           = header->size;
+    new_node->size = size;
+    new_node->next = node;
+    *origin        = new_node;
 }
