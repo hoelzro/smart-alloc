@@ -41,11 +41,18 @@ basic_free(void)
 {
 }
 
+void
+free_null(void)
+{
+    smart_free(NULL);
+}
+
 int
 main(int argc, char **argv)
 {
     basic_test();
     two_alloc();
     basic_free();
+    free_null();
     return 0;
 }
