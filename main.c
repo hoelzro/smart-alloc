@@ -22,9 +22,25 @@ basic_test(void)
 
 }
 
+void
+two_alloc(void)
+{
+    char *message1;
+    char *message2;
+
+    message1 = smart_dup("Hello");
+    message2 = smart_dup("World");
+
+    printf("%s, %s!\n", message1, message2);
+    smart_free(message1);
+    smart_free(message2);
+}
+
 int
 main(int argc, char **argv)
 {
     basic_test();
+    two_alloc();
+    basic_free();
     return 0;
 }
