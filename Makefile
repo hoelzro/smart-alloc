@@ -1,3 +1,5 @@
+CFLAGS+=-Wall -Wextra -Wunused -Werror -Wpedantic
+
 main: main.c smart-alloc.o
 	gcc -o $@ $^
 
