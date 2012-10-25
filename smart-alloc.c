@@ -80,8 +80,11 @@ smart_alloc(size_t size)
         return NULL;
     }
 
+    if(node->size - size < sizeof(struct free_list)) {
+        size = node->size;
+    }
     next_node = (struct free_list *) (((char *) node) + sizeof(struct free_list) + size);
-    if(node->next != next_node && node->size - size > sizeof(struct free_list)) {
+    if(node->next != next_node) {
         next_node->next = node->next;
         next_node->size = node->size - (sizeof(struct free_list) + size);
     }
