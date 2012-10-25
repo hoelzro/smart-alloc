@@ -2,8 +2,8 @@
 #include <string.h>
 #include "smart-alloc.h"
 
-int
-main(int argc, char **argv)
+void
+basic_test(void)
 {
     char *message = smart_alloc(sizeof("Hello, World!"));
 
@@ -11,5 +11,11 @@ main(int argc, char **argv)
     printf("%s\n", message);
     /*smart_free(message);*/
 
+}
+
+int
+main(int argc, char **argv)
+{
+    basic_test();
     return 0;
 }
