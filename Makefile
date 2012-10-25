@@ -1,7 +1,7 @@
 CFLAGS+=-Wall -Wextra -Wunused -Werror -Wpedantic
 
 main: main.c smart-alloc.o
-	gcc -o $@ $^
+	gcc $(CFLAGS) -o $@ $^
 
 smart-alloc.o: smart-alloc.c smart-alloc.h
-	gcc -c -o $@ $<
+	gcc $(CFLAGS) -c -o $@ $<
