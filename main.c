@@ -18,7 +18,7 @@ basic_test(void)
     char *message = smart_dup("Hello, World!");
 
     printf("%s\n", message);
-    /*smart_free(message);*/
+    smart_free(message);
 
 }
 
