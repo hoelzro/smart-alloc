@@ -63,6 +63,8 @@ smart_alloc(size_t size)
     struct free_list *next_node;
     struct alloc *header;
 
+    dump_memory("before alloc");
+
     if(! fl_head) {
         if(init_memory()) {
             return NULL;
@@ -80,6 +82,7 @@ smart_alloc(size_t size)
         return NULL;
     }
 
+    dump_memory("mid alloc");
     if(node->size - size < sizeof(struct free_list)) {
         size = node->size;
     }
@@ -93,6 +96,7 @@ smart_alloc(size_t size)
     header       = (struct alloc *) node;
     header->size = size;
 
+    dump_memory("after alloc");
     return (void *) node + sizeof(struct alloc);
 }
 
@@ -105,6 +109,7 @@ smart_free(void *p)
     struct alloc *header       = (struct alloc *) (p - sizeof(struct alloc));
     size_t size;
 
+    dump_memory("before free");
     if(!p) {
         return;
     }
@@ -119,4 +124,6 @@ smart_free(void *p)
     new_node->size = size;
     new_node->next = node;
     *origin        = new_node;
+
+    dump_memory("after free");
 }
