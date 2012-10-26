@@ -2,4 +2,4 @@
 
 # What's with the name?
 
-http://en.wikipedia.org/wiki/Smart\_Alec
+http://en.wikipedia.org/wiki/Smart_Alec
