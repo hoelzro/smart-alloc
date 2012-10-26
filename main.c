@@ -1,3 +1,4 @@
+#include <assert.h>
 #include <stdio.h>
 #include <string.h>
 #include "smart-alloc.h"
@@ -74,6 +75,39 @@ free_null(void)
     smart_free(NULL);
 }
 
+void checkered_alloc(void)
+{
+    int i = 0;
+    int j;
+    char *pointers[10];
+    extern void dump_memory(const char *);
+
+    for(i = 0; i < 10; i++) {
+        pointers[i] = smart_alloc(100);
+        assert(pointers[i]);
+        for(j = 0; j < 100; j++) {
+            pointers[i][j] = 1;
+        }
+    }
+    for(i = 1; i < 10; i += 2) {
+        smart_free(pointers[i]);
+    }
+    smart_debug = 1;
+    dump_memory("shit");
+    for(i = 1; i < 10; i += 2) {
+        printf("i = %d\n", i);
+        pointers[i] = smart_alloc(90);
+        assert(pointers[i]);
+        for(j = 0; j < 90; j++) {
+            pointers[i][j] = 1;
+        }
+    }
+
+    for(i = 0; i < 10; i++) {
+        smart_free(pointers[i]);
+    }
+}
+
 int
 main(int argc, char **argv)
 {
@@ -82,5 +116,6 @@ main(int argc, char **argv)
     oom();
     basic_free();
     free_null();
+    checkered_alloc();
     return 0;
 }
