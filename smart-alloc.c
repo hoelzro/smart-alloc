@@ -3,6 +3,7 @@
 #include <stdio.h>
 
 #define ARENA_SIZE (4096)
+#define END_OF_MEMORY() ((void *) (memory + ARENA_SIZE))
 
 int smart_debug = 0;
 
@@ -87,7 +88,9 @@ smart_alloc(size_t size)
         size = node->size;
     }
     next_node = (struct free_list *) (((char *) node) + sizeof(struct free_list) + size);
-    if(node->next != next_node) {
+    if(((void *) next_node) >= END_OF_MEMORY()) {
+        next_node = NULL;
+    } else if(node->next != next_node) {
         next_node->next = node->next;
         next_node->size = node->size - (sizeof(struct free_list) + size);
     }
