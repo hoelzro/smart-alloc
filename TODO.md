@@ -1,5 +1,4 @@
   * We could coalesce adjacent free blocks
-  * OO-ify smart\_alloc
   * Create a standalone implementation of malloc() and friends using smart\_alloc
   * smart\_alloc\_info - Returns allocation information
   * smart\_alloc\_options - Where to get memory from, whether or not to zero/randomize memory post-free
