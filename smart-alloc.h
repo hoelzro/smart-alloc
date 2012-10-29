@@ -3,8 +3,12 @@
 
 #include <stddef.h>
 
-void * smart_alloc(size_t size);
-void smart_free(void *p);
+struct smart_alloc;
+
+struct smart_alloc *smart_alloc_init(void *mem, size_t size);
+void smart_alloc_destroy(struct smart_alloc *sa);
+void * smart_alloc(struct smart_alloc *sa, size_t size);
+void smart_free(struct smart_alloc *sa, void *p);
 
 int smart_debug;
 

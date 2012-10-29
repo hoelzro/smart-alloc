@@ -2,8 +2,7 @@
 
 #include <stdio.h>
 
-#define ARENA_SIZE (4096)
-#define END_OF_MEMORY() ((void *) (memory + ARENA_SIZE))
+#define END_OF_MEMORY(sa) (((void *) sa) + sa->size)
 
 int smart_debug = 0;
 
@@ -17,15 +16,12 @@ struct smart_alloc {
     struct free_list *fl_head;
 };
 
-static char memory[ARENA_SIZE];
-static struct smart_alloc *sa = NULL;
-
 struct alloc {
     size_t size;
 };
 
 static void
-dump_memory(const char *message)
+dump_memory(struct smart_alloc *sa, const char *message)
 {
     struct free_list *node       = NULL;
     struct free_list *final_node = NULL;
@@ -66,39 +62,39 @@ dump_memory(const char *message)
     }
 }
 
-static int
-init_memory(void)
+struct smart_alloc *
+smart_alloc_init(void *mem, size_t size)
 {
-    int i;
+    size_t i;
+    char *memory           = (char *) mem;
+    struct smart_alloc *sa = (struct smart_alloc *) mem;
 
-    for(i = 0; i < ARENA_SIZE; i++) {
+    for(i = 0; i < size; i++) {
         memory[i] = 0;
     }
 
-    sa                = (struct smart_alloc *) memory;
-    sa->size          = ARENA_SIZE;
+    sa->size          = size;
     sa->fl_head       = (struct free_list *) (memory + sizeof(struct smart_alloc));
     sa->fl_head->next = NULL;
-    sa->fl_head->size = ARENA_SIZE - sizeof(struct smart_alloc) - sizeof(struct free_list);
+    sa->fl_head->size = size - sizeof(struct smart_alloc) - sizeof(struct free_list);
 
-    return 0;
+    return sa;
+}
+
+void
+smart_alloc_destroy(struct smart_alloc *sa)
+{
 }
 
 void *
-smart_alloc(size_t size)
+smart_alloc(struct smart_alloc *sa, size_t size)
 {
     struct free_list **origin;
     struct free_list *node;
     struct free_list *next_node;
     struct alloc *header;
 
-    if(! sa) {
-        if(init_memory()) {
-            return NULL;
-        }
-    }
-
-    dump_memory("before alloc");
+    dump_memory(sa, "before alloc");
 
     origin = &(sa->fl_head);
     node   = sa->fl_head;
@@ -112,12 +108,12 @@ smart_alloc(size_t size)
         return NULL;
     }
 
-    dump_memory("mid alloc");
+    dump_memory(sa, "mid alloc");
     if(node->size - size < sizeof(struct free_list)) {
         size = node->size;
     }
     next_node = (struct free_list *) (((char *) node) + sizeof(struct free_list) + size);
-    if(((void *) next_node) >= END_OF_MEMORY()) {
+    if(((void *) next_node) >= END_OF_MEMORY(sa)) {
         next_node = NULL;
     } else if(node->next != next_node) {
         next_node->next = node->next;
@@ -128,12 +124,12 @@ smart_alloc(size_t size)
     header       = (struct alloc *) node;
     header->size = size;
 
-    dump_memory("after alloc");
+    dump_memory(sa, "after alloc");
     return (void *) node + sizeof(struct alloc);
 }
 
 void
-smart_free(void *p)
+smart_free(struct smart_alloc *sa, void *p)
 {
     struct free_list **origin;
     struct free_list *node;
@@ -141,16 +137,12 @@ smart_free(void *p)
     struct alloc *header;
     size_t size;
 
-    if(! sa) {
-        init_memory();
-    }
-
     origin   = &(sa->fl_head);
     node     = sa->fl_head;
     new_node = NULL;
     header   = (struct alloc *) (p - sizeof(struct alloc));
 
-    dump_memory("before free");
+    dump_memory(sa, "before free");
     if(!p) {
         return;
     }
@@ -166,5 +158,5 @@ smart_free(void *p)
     new_node->next = node;
     *origin        = new_node;
 
-    dump_memory("after free");
+    dump_memory(sa, "after free");
 }
