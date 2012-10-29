@@ -32,6 +32,11 @@ dump_memory(const char *message)
     char *end_memory;
     char *end_free_region;
 
+    if(! sa) {
+        printf("sa is NULL!\n");
+        node = 0;
+        (void)node->size;
+    }
     node = sa->fl_head;
 
     if(smart_debug) {
@@ -46,7 +51,18 @@ dump_memory(const char *message)
             node = 0;
             (void)node->size;
         }
-        node = node->next;
+        final_node = node;
+        node       = node->next;
+    }
+    end_memory      = ((char *) sa) + sa->size;
+    end_free_region = ((char *) final_node) + sizeof(struct free_list) + final_node->size;
+
+    if(end_free_region > end_memory) {
+        printf("final node's region extends beyond memory!\n");
+        printf("end of memory: %p\n", end_memory);
+        printf("end of free region: %p\n", end_free_region);
+        node = 0;
+        (void)node->size;
     }
 }
 
