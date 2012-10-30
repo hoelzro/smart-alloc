@@ -68,7 +68,7 @@ basic_free(struct smart_alloc *sa)
         printf("%d: NOT OK\n", __LINE__);
     }
 
-    // XXX free mem
+    smart_free(sa, mem);
 }
 
 void
