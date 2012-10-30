@@ -2,8 +2,6 @@
 
 #include <stdio.h>
 
-#define END_OF_MEMORY(sa) (((void *) sa) + sa->size)
-
 int smart_debug = 0;
 
 struct free_list {
@@ -112,10 +110,10 @@ smart_alloc(struct smart_alloc *sa, size_t size)
     if(node->size - size < sizeof(struct free_list)) {
         size = node->size;
     }
-    next_node = (struct free_list *) (((char *) node) + sizeof(struct free_list) + size);
-    if(((void *) next_node) >= END_OF_MEMORY(sa)) {
-        next_node = NULL;
-    } else if(node->next != next_node) {
+    if(size == node->size) {
+        next_node = node->next;
+    } else {
+        next_node       = (struct free_list *) (((char *) node) + sizeof(struct free_list) + size);
         next_node->next = node->next;
         next_node->size = node->size - (sizeof(struct free_list) + size);
     }
