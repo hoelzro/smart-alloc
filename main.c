@@ -118,6 +118,7 @@ main(int argc, char **argv)
     basic_free(sa);
     free_null(sa);
     checkered_alloc(sa);
+    /* try free'ing a pointer from one sa in another? */
 
     smart_alloc_destroy(sa);
     return 0;
