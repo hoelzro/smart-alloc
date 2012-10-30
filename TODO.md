@@ -6,3 +6,8 @@
   * Be able to give memory back if we can
   * Optionally run tests in a child process
   * free\_list.size isn't that accurate; the available size is free\_list.size + sizeof(struct free\_list) - sizeof(struct alloc)
+  * Add assertions that can be compiled out
+   * The free list must never have a cycle
+   * The last node of the free list must not extend outside of managed memory
+   * Every free list node must be within managed memory
+   * Every free list node's size must be greater than 0
