@@ -5,3 +5,4 @@
   * What license should this be under?
   * Be able to give memory back if we can
   * Optionally run tests in a child process
+  * free\_list.size isn't that accurate; the available size is free\_list.size + sizeof(struct free\_list) - sizeof(struct alloc)
