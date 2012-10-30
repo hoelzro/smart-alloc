@@ -5,6 +5,7 @@
   * What license should this be under?
   * Be able to give memory back if we can
   * Optionally run tests in a child process
+   * Or in the middle of read-only memory so we can catch access violations
   * free\_list.size isn't that accurate; the available size is free\_list.size + sizeof(struct free\_list) - sizeof(struct alloc)
   * Add assertions that can be compiled out
    * The free list must never have a cycle
