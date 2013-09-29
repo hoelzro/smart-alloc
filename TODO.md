@@ -12,3 +12,12 @@
    * The last node of the free list must not extend outside of managed memory
    * Every free list node must be within managed memory
    * Every free list node's size must be greater than 0
+  * Ideas:
+    * Allocate more memory callback
+    * Free memory callback
+    * Double free callback
+    * Debug/dump function
+    * smart_alloc_init2(void *mem, size_t size, size_t sm_size)
+    * Diagnostics (bytes free, bytes allocated, free list size, # allocations, # frees, # chunks of memory requested via allocation callback)
+    * Think about mallopt/mallinfo
+    * Realloc
